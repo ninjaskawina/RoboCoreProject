@@ -36,27 +36,24 @@ void hMain(void)
     bool maindown = false;
     bool open = false;
     
-    while (counter < 5)
-    {
-        bool s = sensor.isPressed();
-        
-        if(s) { // Changing mode
-            if(!maindown) {
-                maindown = true;
-                if(open) {
-                    motorOpen(false);
-                    open = false;
-                } else {
-                    motorOpen(true);
-                    open = true;
-                }
-            }
-        } else {
-            if(maindown) {
-                maindown = false;
+    bool s = sensor.isPressed();
+    
+    if(s) { // Changing mode
+        if(!maindown) {
+            maindown = true;
+            if(open) {
+                motorOpen(false);
+                open = false;
+            } else {
+                motorOpen(true);
+                open = true;
             }
         }
-        sys.delay_ms(50);
-        
+    } else {
+        if(maindown) {
+            maindown = false;
+        }
     }
+    sys.delay_ms(50);
+
 }
