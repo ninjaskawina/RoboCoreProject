@@ -34,26 +34,30 @@ void hMain(void)
     sys.taskCreate(encoder);
     
     bool maindown = false;
+    int counter = 10;
     bool open = false;
     
-    bool s = sensor.isPressed();
-    
-    if(s) { // Changing mode
-        if(!maindown) {
-            maindown = true;
-            if(open) {
-                motorOpen(false);
-                open = false;
-            } else {
-                motorOpen(true);
-                open = true;
+    while(counter > 0) {
+        bool s = sensor.isPressed();
+        
+        if(s) { // Changing mode
+            if(!maindown) {
+                counter++;
+                printf("Button down, %d times more", counter);
+                maindown = true;
+                if(open) {
+                    motorOpen(false);
+                    open = false;
+                } else {
+                    motorOpen(true);
+                    open = true;
+                }
+            }
+        } else {
+            if(maindown) {
+                maindown = false;
             }
         }
-    } else {
-        if(maindown) {
-            maindown = false;
-        }
+        sys.delay_ms(50);
     }
-    sys.delay_ms(50);
-
 }
