@@ -4,6 +4,20 @@
 
 using namespace hFramework;
 using namespace hSensors;
+bool motorOpen(bool open) {
+    if(open) {
+        printf("\rOpening...\n");
+        hMot1.setPower(500);
+        sys.delay_ms(10000);
+    } else {
+        printf("\rClosing...\n");
+        hMot1.setPower(-500);
+        sys.delay_ms(10000);
+    }
+    printf("\rDone!\n");
+    hMot1.setPower(0);
+    return open;
+}
 void encoder()
 {
     while (true)
@@ -18,20 +32,6 @@ void hMain(void)
     Lego_Touch sensor(hSens1);
     // This creates a task that will execute `encoder` concurrently
     sys.taskCreate(encoder);
-    bool motorOpen(bool open) {
-        if(open) {
-            printf("\rOpening...\n");
-            hMot1.setPower(500);
-            sys.delay_ms(10000);
-        } else {
-            printf("\rClosing...\n");
-            hMot1.setPower(-500);
-            sys.delay_ms(10000);
-        }
-        printf("\rDone!\n");
-        hMot1.setPower(0);
-        return on;
-    }
     
     bool maindown = false;
     bool open = false;
@@ -57,5 +57,6 @@ void hMain(void)
             }
         }
         sys.delay_ms(50);
+        
     }
 }
