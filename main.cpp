@@ -18,10 +18,23 @@ void hMain(void)
     Lego_Touch sensor(hSens1);
     // This creates a task that will execute `encoder` concurrently
     sys.taskCreate(encoder);
+    bool motorOpen(bool open) {
+        if(open) {
+            printf("\rOpening...\n");
+            hMot1.setPower(500);
+            sys.delay_ms(10000);
+        } else {
+            printf("\rClosing...\n");
+            hMot1.setPower(-500);
+            sys.delay_ms(10000);
+        }
+        printf("\rDone!\n");
+        hMot1.setPower(0);
+        return on;
+    }
     
     bool maindown = false;
-    int counter = 0;
-    bool run = false;
+    bool open = false;
     
     while (counter < 5)
     {
@@ -30,14 +43,12 @@ void hMain(void)
         if(s) { // Changing mode
             if(!maindown) {
                 maindown = true;
-                counter++;
-                printf("Counter: %d\n",counter);
-                if(run) {
-                    printf("Main button OFF!\n");
-                    run = false;
+                if(open) {
+                    motorOpen(false);
+                    open = false;
                 } else {
-                    printf("Main button ON!\n");
-                    run = true;
+                    motorOpen(true);
+                    open = true;
                 }
             }
         } else {
@@ -46,21 +57,5 @@ void hMain(void)
             }
         }
         sys.delay_ms(50);
-        
-        if(run) {
-            bool b1 = hBtn1.isPressed();
-            bool b2 = hBtn2.isPressed();
-            
-            if(b1 && !b2) {
-                hMot1.setPower(1000);
-                sys.delay_ms(50);
-            } else if (b2 && !b1) {
-                hMot1.setPower(-1000);
-                sys.delay_ms(50);
-            } else {
-                hMot1.stop();
-                sys.delay_ms(50);
-            }
-        }
     }
 }
