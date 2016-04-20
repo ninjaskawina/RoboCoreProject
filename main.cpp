@@ -13,28 +13,27 @@ private:
     bool locked = true;
 public:
     Lock(int power, int angle1, int angle2, bool block) {
-        this.power = power;
-        this.angle1 = angle1;
-        this.angle2 = angle2;
-        this.block = block;
+        this->power = power;
+        this->angle1 = angle1;
+        this->angle2 = angle2;
+        this->block = block;
     };
     Lock() {};
     bool open(bool open) {
         if(open) {
             printf("\rOpening...\n");
-            hMot1.rotAbs(this.angle1, this.power, this.block);
-            this.locked = false;
+            hMot1.rotAbs(this->angle1, this->power, this->block);
         } else {
             printf("\rClosing...\n");
-            hMot1.rotAbs(this.angle2, this.power, this.block);
-            this.locked = true;
+            hMot1.rotAbs(this->angle2, this->power, this->block);
         }
+        this->locked = !open;
         hMot1.stopRegulation();
         printf("\rDone!\n");
         return open;
     };
     bool isLocked() {
-        return this.locked;
+        return this->locked;
     }
     bool calibrate() {
         
@@ -60,9 +59,9 @@ void hMain(void)
                 printf("Button down, %d times more", counter);
                 maindown = true;
                 if(open) {
-                    open = l->open(false);
+                    open = l.open(false);
                 } else {
-                    open = l->open(true);
+                    open = l.open(true);
                 }
             }
         } else {
