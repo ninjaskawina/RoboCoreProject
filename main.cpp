@@ -32,7 +32,9 @@ public:
         this->angle2 = angle2;
         servo = hMot1.useAsServo();
     };
-    Lock() {};
+    Lock() {
+        servo = hMot1.useAsServo();
+    };
     bool lock() {
         return this->open(false);
     }
