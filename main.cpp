@@ -20,8 +20,6 @@ public:
     };
     Lock() {};
     bool open(bool open) {
-        char * tasklist;
-        printf(sys.getTaskList(tasklist));
         if(open) {
             printf("\rOpening...\n");
             hMot1.rotAbs(this->angle1, this->power, this->block);
@@ -30,7 +28,7 @@ public:
             hMot1.rotAbs(this->angle2, this->power, this->block);
         }
         this->locked = !open;
-        hMot1.stopRegulation();
+        hMot1.stopRegulation(this->block, 10);
         printf("\rDone!\n");
         return open;
     };
