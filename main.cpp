@@ -5,7 +5,7 @@
 using namespace hFramework;
 using namespace hSensors;
 bool motorOpen(bool open) {
-    int power = 1000;
+    int power = 400;
     bool block = 1;
     int angle1 = 0;
     int angle2 = 180;
@@ -17,6 +17,7 @@ bool motorOpen(bool open) {
         printf("\rClosing...\n");
         hMot1.rotAbs(angle2, power, block);
     }
+    hMot1.releaseServo();
     printf("\rDone!\n");
     return open;
 }
