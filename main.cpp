@@ -5,21 +5,14 @@
 using namespace hFramework;
 using namespace hSensors;
 bool motorOpen(bool open) {
-    int power = 500;
+    int power = 100;
     if(open) {
         printf("\rOpening...\n");
-        hMot1.setPower(power);
+        hMot1.rotAbs(0);
     } else {
         printf("\rClosing...\n");
-        hMot1.setPower(-1 * power);
+        hMot1.rotAbs(100);
     }
-    hMot1.resetEncoderCnt();
-    int toAngle = 180;
-    int currentAngle = 0;
-    do {
-        currentAngle = hMot1.getEncoderCnt()
-        printf("\r%d\n",hMot1.getEncoderCnt());
-    } while (toAngle > currentAngle || (toAngle * -1 < currentAngle));
     printf("\rDone!\n");
     hMot1.setPower(0);
     return open;
