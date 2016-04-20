@@ -4,56 +4,65 @@
 
 using namespace hFramework;
 using namespace hSensors;
-bool motorOpen(bool open) {
-    int power = 400;
-    bool block = 1;
+class Lock {
+private:
+    int power = 1000;
     int angle1 = 0;
     int angle2 = 180;
-    
-    if(open) {
-        printf("\rOpening...\n");
-        hMot1.rotAbs(angle1, power, block);
-    } else {
-        printf("\rClosing...\n");
-        hMot1.rotAbs(angle2, power, block);
+    bool block = 1;
+    bool locked = true;
+public:
+    Lock(int power, int angle1, int angle2, bool block) {
+        this.power = power;
+        this.angle1 = angle1;
+        this.angle2 = angle2;
+        this.block = block;
+    };
+    Lock() {};
+    bool open(bool open) {
+        if(open) {
+            printf("\rOpening...\n");
+            hMot1.rotAbs(this.angle1, this.power, this.block);
+            this.locked = false;
+        } else {
+            printf("\rClosing...\n");
+            hMot1.rotAbs(this.angle2, this.power, this.block);
+            this.locked = true;
+        }
+        hMot1.stopRegulation();
+        printf("\rDone!\n");
+        return open;
+    };
+    bool isLocked() {
+        return this.locked;
     }
-    hMot1.releaseServo();
-    printf("\rDone!\n");
-    return open;
-}
-void encoder()
-{
-    while (true)
-    {
-        // Print the current rotation of hMot1 in encoder ticks
-        sys.delay(100);
+    bool calibrate() {
+        
     }
-}
+};
+
+
 void hMain(void)
 {
     sys.setLogDev(&Serial);
     Lego_Touch sensor(hSens1);
-    // This creates a task that will execute `encoder` concurrently
-    sys.taskCreate(encoder);
     
     bool maindown = false;
-    int counter = 10;
     bool open = false;
     
-    while(counter > 0) {
+    Lock l = new Lock();
+    
+    while(!hBtn1.isPressed()) {
         bool s = sensor.isPressed();
         
         if(s) { // Changing mode
             if(!maindown) {
-                counter++;
                 printf("Button down, %d times more", counter);
                 maindown = true;
                 if(open) {
-                    motorOpen(false);
-                    open = false;
+                    open = l->open(false);
                 } else {
-                    motorOpen(true);
-                    open = true;
+                    open = l->open(true);
                 }
             }
         } else {
