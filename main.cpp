@@ -20,6 +20,8 @@ public:
     };
     Lock() {};
     bool open(bool open) {
+        char * tasklist;
+        printf(sys.getTaskList(tasklist));
         if(open) {
             printf("\rOpening...\n");
             hMot1.rotAbs(this->angle1, this->power, this->block);
@@ -49,14 +51,13 @@ void hMain(void)
     bool maindown = false;
     bool open = false;
     
-    Lock l = new Lock();
+    Lock l;
     
     while(!hBtn1.isPressed()) {
         bool s = sensor.isPressed();
         
         if(s) { // Changing mode
             if(!maindown) {
-                printf("Button down, %d times more", counter);
                 maindown = true;
                 if(open) {
                     open = l.open(false);
