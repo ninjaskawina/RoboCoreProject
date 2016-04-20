@@ -5,16 +5,19 @@
 using namespace hFramework;
 using namespace hSensors;
 bool motorOpen(bool open) {
-    int power = 100;
+    int power = 1000;
+    bool block = 1;
+    int angle1 = 0;
+    int angle2 = 180;
+    
     if(open) {
         printf("\rOpening...\n");
-        hMot1.rotAbs(0);
+        hMot1.rotAbs(angle1, power, block);
     } else {
         printf("\rClosing...\n");
-        hMot1.rotAbs(100);
+        hMot1.rotAbs(angle2, power, block);
     }
     printf("\rDone!\n");
-    hMot1.setPower(0);
     return open;
 }
 void encoder()
