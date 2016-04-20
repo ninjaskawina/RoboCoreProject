@@ -11,16 +11,16 @@ private:
     int angle2 = 180;
     bool block = 1;
     bool locked = true;
+    Iservo servo;
+    
     bool open(bool open) {
-        hMot1.useAsServo();
         if(open) {
             printf("\rOpening...\n");
-            hMot1.rotAbs(this->angle1, this->power, this->block);
+            servo.rotAbs(this->angle1, this->power, this->block);
         } else {
             printf("\rClosing...\n");
-            hMot1.rotAbs(this->angle2, this->power, this->block);
+            servo.rotAbs(this->angle2, this->power, this->block);
         }
-        hMot1.releaseServo();
         this->locked = !open;
         printf("\rDone!\n");
         return open;
@@ -30,6 +30,7 @@ public:
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
+        servo = hMot1.useAsServo();
     };
     Lock() {};
     bool lock() {
@@ -38,7 +39,7 @@ public:
     bool unlock() {
         return this->open(true);
     }
-    bool switch() {
+    bool change() {
         return this->open(!this->locked);
     }
     bool isLocked() {
