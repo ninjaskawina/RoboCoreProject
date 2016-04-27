@@ -11,7 +11,7 @@ private:
     int angle2 = 180;
     bool block = 1;
     bool locked = true;
-    hMotor& mot;
+    hMotor& mot = hMot1;
     
     bool open(bool open) {
         if(open) {
@@ -26,14 +26,12 @@ private:
         return open;
     };
 public:
-    Lock(int power, int angle1, int angle2, hMotor& motor) {
+    Lock(int power, int angle1, int angle2) {
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
-        this->mot = motor;
     };
-    Lock(hMotor& motor) {
-        this->mot = motor;
+    Lock() {
     };
     bool lock() {
         return this->open(false);
@@ -64,7 +62,7 @@ void hMain(void)
     bool maindown = false;
     bool open = false;
     
-    Lock l(hMot1);
+    Lock l;
     
     while(!hBtn1.isPressed()) {
         bool s = sensor.isPressed();
