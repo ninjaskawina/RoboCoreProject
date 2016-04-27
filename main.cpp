@@ -16,10 +16,10 @@ private:
     bool open(bool open) {
         if(open) {
             printf("\rOpening...\n");
-            this->motor.rotAbs(this->angle1, this->power, this->block);
+            this->mot.rotAbs(this->angle1, this->power, this->block);
         } else {
             printf("\rClosing...\n");
-            this->motor.rotAbs(this->angle2, this->power, this->block);
+            this->mot.rotAbs(this->angle2, this->power, this->block);
         }
         this->locked = !open;
         printf("\rDone!\n");
