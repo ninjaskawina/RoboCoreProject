@@ -11,29 +11,29 @@ private:
     int angle2 = 180;
     bool block = 1;
     bool locked = true;
-    Iservo servo;
+    hMotor& mot;
     
     bool open(bool open) {
         if(open) {
             printf("\rOpening...\n");
-            servo.rotAbs(this->angle1, this->power, this->block);
+            this->motor.rotAbs(this->angle1, this->power, this->block);
         } else {
             printf("\rClosing...\n");
-            servo.rotAbs(this->angle2, this->power, this->block);
+            this->motor.rotAbs(this->angle2, this->power, this->block);
         }
         this->locked = !open;
         printf("\rDone!\n");
         return open;
     };
 public:
-    Lock(int power, int angle1, int angle2) {
+    Lock(int power, int angle1, int angle2, hMotor& motor) {
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
-        servo = hMot1.useAsServo();
+        this->mot = motor;
     };
-    Lock() {
-        servo = hMot1.useAsServo();
+    Lock(hMotor& motor) {
+        this->mot = motor;
     };
     bool lock() {
         return this->open(false);
@@ -51,7 +51,7 @@ public:
         
     }
     bool free() {
-        return hMot1.stopRegulation(this->block, 10);
+        return this->mot.stopRegulation(this->block, 10);
     }
 };
 
@@ -64,11 +64,15 @@ void hMain(void)
     bool maindown = false;
     bool open = false;
     
-    Lock l;
+    Lock l(hMot1);
     
     while(!hBtn1.isPressed()) {
         bool s = sensor.isPressed();
         
+        if(hBtn2.isPressed()) {
+            l.free();
+            printf("\rFreed!\n");
+        }
         if(s) { // Changing mode
             if(!maindown) {
                 maindown = true;
