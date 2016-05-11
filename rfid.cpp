@@ -39,13 +39,10 @@ public:
                                     this->inRange = false;
                                     return false;
                                 }
-                                //hExt1.serial.printf("\r\n4\r\n");
                             }
                         }
                     }
                 }
-                //hExt1.serial.printf("\r\n%s\r\n", tocomp.c_str());
-                //hExt1.serial.printf("\r\n%s\r\n", buffer.c_str());
                 this->buffer = "";
             }
             //110D6BB143D51209
@@ -54,4 +51,27 @@ public:
 };
 
 void hMain(void)
-{}
+{
+    sys.setLogDev(&Serial);
+    Lego_Touch sensor(hSens1);
+    
+    bool open = false;
+    
+//    Lock l;
+    RFIDReader r;
+    
+    while(!hBtn1.isPressed()) {
+        if(hBtn2.isPressed()) {
+//            l.free();
+            printf("\rFreed!\n");
+        }
+        if(r.available()) { // Read the rfid
+//            if(l.isLocked()) {
+//                l.unlock();
+//            } else {
+//                l.lock();
+//            }
+        }
+        sys.delay_ms(100);
+    }
+}
