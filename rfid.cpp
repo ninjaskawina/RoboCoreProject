@@ -21,39 +21,35 @@ public:
                 //Parse
                 //Check length
                 //Check checksum
-                if(true){
-                    if(this->buffer.length() >= 10){
-                        if(!this->buffer.substr(3, 2).compare("0D")){
-                            if(this->buffer.substr((buffer.length()-5), 2) == "0A"){
-                            }else{
-                                if(!this->buffer.substr(5, (this->buffer.length()-10)).compare("04B3F5F2A44880")){
-                                    if(!this->inRange) {
-                                        this->inRange = true;
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
+                if(this->buffer.length() >= 10){
+                    if(!this->buffer.substr(3, 2).compare("0D")){
+                        if(this->buffer.substr((buffer.length()-5), 2) != "0A"){
+                            if(!this->buffer.substr(5, (this->buffer.length()-10)).compare("04B3F5F2A44880")){
+                                this->buffer = "";
+                                if(!this->inRange) {
+                                    this->inRange = true;
+                                    return true;
                                 } else {
-                                    this->inRange = false;
                                     return false;
                                 }
+                            } else {
+                                this->buffer = "";
+                                this->inRange = false;
+                                return false;
                             }
                         }
                     }
                 }
-                this->buffer = "";
             }
             //110D6BB143D51209
         }
+        return false;
     }
 };
 
 void hMain(void)
 {
     sys.setLogDev(&Serial);
-    Lego_Touch sensor(hSens1);
-    
-    bool open = false;
     
 //    Lock l;
     RFIDReader r;
