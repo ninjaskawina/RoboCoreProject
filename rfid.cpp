@@ -8,6 +8,9 @@ class RFIDReader {
 private:
     std::string buffer = "";
     bool inRange = false;
+    void sendCommand() {
+        hExt1.serial.printf("%c11090A41%c", (char)0x02, (char)0x03);
+    }
 public:
     RFIDReader() {
         hExt1.serial.init(57600, NONE, ONE);
@@ -43,6 +46,7 @@ public:
             }
             //110D6BB143D51209
         }
+        this->sendCommand();
         return false;
     }
 };
