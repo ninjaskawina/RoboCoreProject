@@ -104,7 +104,7 @@ public:
                 this->newTagAvaliable = false;
                 for(unsigned int i=0; i<tags.size(); i++) {
                     if(!tags[i].compare(this->tag)) {
-                        LED2.on();
+                        LED1.on();
                         return true;
                     }
                 }
@@ -126,17 +126,17 @@ void hMain(void){
     
     l.unlock();
     while(!hBtn1.isPressed()) {
-        LED2.off();
+        LED1.off();
         if(hBtn2.isPressed()) {
             l.free();
             printf("\rFreed!\n");
         }
         if(r.compareTag()) { // Check if spotted tag and it is in the list
             if(l.isLocked()) {
-                LED1.on();
+                LED2.on();
                 l.unlock();
             } else {
-                LED1.off();
+                LED2.off();
                 l.lock();
             }
         }
