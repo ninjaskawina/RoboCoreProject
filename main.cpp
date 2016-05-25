@@ -1,6 +1,6 @@
 #include "hFramework.h"
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <vector>
 
 using namespace hFramework;
@@ -78,7 +78,7 @@ private:
 
                             if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
                                 // New tag spotted
-                                LED2.on();
+                                LED3.on();
                                 this->tag = buffer.substr(5, (buffer.length()-10));
                                 this->newTagAvaliable = true;
                             }
@@ -105,7 +105,7 @@ public:
                 this->newTagAvaliable = false;
                 for(unsigned int i=0; i<tags.size(); i++) {
                     if(!tags[i].compare(this->tag)) {
-                        LED1.on();
+                        LED2.on();
                         return true;
                     }
                 }
@@ -133,11 +133,13 @@ void hMain(void){
             printf("\rFreed!\n");
         }
         if(r.compareTag()) { // Check if spotted tag and it is in the list
-           if(l.isLocked()) {
-               l.unlock();
-           } else {
-               l.lock();
-           }
+            if(l.isLocked()) {
+                LED1.on();
+                l.unlock();
+            } else {
+                LED1.off();
+                l.lock();
+            }
         }
         sys.delay_ms(100);
     }
