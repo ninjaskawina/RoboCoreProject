@@ -74,15 +74,15 @@ private:
                 if(buffer.length() >= 10){
                     if(!buffer.substr(3, 2).compare("0D")){
                         if(buffer.substr((buffer.length()-5), 2) != "0A"){
-
+                            LED3.on();
                             if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
                                 // New tag spotted
-                                LED3.on();
                                 this->tag = buffer.substr(5, (buffer.length()-10));
                                 this->newTagAvaliable = true;
                             }
                             return true;
-
+                        } else {
+                            LED3.off();
                         }
                     }
                 }
@@ -126,7 +126,6 @@ void hMain(void){
     
     l.unlock();
     while(!hBtn1.isPressed()) {
-        LED1.off();
         LED2.off();
         if(hBtn2.isPressed()) {
             l.free();
