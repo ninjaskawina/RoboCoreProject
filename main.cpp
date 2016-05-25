@@ -73,12 +73,12 @@ private:
                 //Check checksum
                 if(buffer.length() >= 10){
                     if(!buffer.substr(3, 2).compare("0D")){
-                        if(buffer.subuffer.length()-5), 2) != "0A"){
+                        if(buffer.substr((buffer.length()-5), 2) != "0A"){
 
                             if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
                                 // New tag spotted
                                 LED2.on();
-                                strcpy(this->tag,buffer.substr(5, (buffer.length()-10)));
+                                this->tag = buffer.substr(5, (buffer.length()-10));
                                 this->newTagAvaliable = true;
                             }
                             return true;
