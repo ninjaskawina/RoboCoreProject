@@ -1,5 +1,7 @@
 #include "hFramework.h"
 #include <stdio.h>
+#include <string.h>
+#include <vector>
 
 using namespace hFramework;
 
@@ -53,40 +55,34 @@ public:
 
 class RFIDReader {
 private:
-    std::string buffer = "";
-    bool inRange = false;
+    std::string tag = "";
+    std::vector<std::string> tags = {"110D6BB143D51209"};
+    bool newTagAvaliable = false;
     void sendCommand() {
         hExt1.serial.printf("%c11090A41%c", (char)0x02, (char)0x03);
     }
-public:
-    RFIDReader() {
-        hExt1.serial.init(57600, NONE, ONE);
-        hExt1.serial.selectSerial();
-    };
-    bool available() {
+
+    bool readId() {
+        std::string buffer = "";
         while(hExt1.serial.available() > 0) {
             char c =  hExt1.serial.getch();
-            this->buffer += c;
+            buffer += c;
             if(c == (char)0x03){
                 //Parse
                 //Check length
                 //Check checksum
-                if(this->buffer.length() >= 10){
-                    if(!this->buffer.substr(3, 2).compare("0D")){
-                        if(this->buffer.substr((buffer.length()-5), 2) != "0A"){
-                            if(!this->buffer.substr(5, (this->buffer.length()-10)).compare("04B3F5F2A44880")){
-                                this->buffer = "";
-                                if(!this->inRange) {
-                                    this->inRange = true;
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            } else {
-                                this->buffer = "";
-                                this->inRange = false;
-                                return false;
+                if(buffer.length() >= 10){
+                    if(!buffer.substr(3, 2).compare("0D")){
+                        if(buffer.subuffer.length()-5), 2) != "0A"){
+
+                            if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
+                                // New tag spotted
+                                LED2.on();
+                                strcpy(this->tag,buffer.substr(5, (buffer.length()-10)));
+                                this->newTagAvaliable = true;
                             }
+                            return true;
+
                         }
                     }
                 }
@@ -94,7 +90,31 @@ public:
             //110D6BB143D51209
         }
         this->sendCommand();
+        // No tag
         return false;
+    }
+public:
+    RFIDReader() {
+        hExt1.serial.init(57600, NONE, ONE);
+        hExt1.serial.selectSerial();
+    };
+    bool compareTag() {
+        if(this->readId()) {
+            if(this->newTagAvaliable) {
+                this->newTagAvaliable = false;
+                for(std:string t : this->tags) {
+                    if(!t.compare(this->tag)) {
+                        LED1.on();
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 };
 
@@ -105,19 +125,18 @@ void hMain(void){
     RFIDReader r;
     
     while(!hBtn1.isPressed()) {
+        LED1.off();
+        LED2.off();
         if(hBtn2.isPressed()) {
             l.free();
             printf("\rFreed!\n");
         }
-        if(r.available()) { // Read the rfid
-            LED1.on();
+        if(r.compareTag()) { // Check if spotted tag and it is in the list
            if(l.isLocked()) {
                l.unlock();
            } else {
                l.lock();
            }
-        } else {
-            LED1.off();
         }
         sys.delay_ms(100);
     }
