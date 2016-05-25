@@ -1,6 +1,6 @@
 #include "hFramework.h"
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <vector>
 
 using namespace hFramework;
@@ -8,11 +8,11 @@ using namespace hFramework;
 class Lock {
 private:
     int power = 1000;
-    int angle1 = 0;
+    int angle1 = -40;
     int angle2 = 180;
     bool block = 1;
     bool locked = true;
-    
+
     bool open(bool open) {
         if(open) {
             printf("\rOpening...\n");
@@ -30,6 +30,7 @@ public:
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
+        hMot1.rotAbs(this->angle1, this->power, this->block);
     };
     Lock() {
     };
@@ -46,7 +47,7 @@ public:
         return this->locked;
     }
     bool calibrate() {
-        
+        return true;
     }
     bool free() {
         return hMot1.stopRegulation(this->block, 10);
@@ -102,8 +103,8 @@ public:
         if(this->readId()) {
             if(this->newTagAvaliable) {
                 this->newTagAvaliable = false;
-                for(std:string t : this->tags) {
-                    if(!t.compare(this->tag)) {
+                for(unsigned int i=0; i<tags.size(); i++) {
+                    if(!tags[i].compare(this->tag)) {
                         LED1.on();
                         return true;
                     }
@@ -120,10 +121,10 @@ public:
 
 void hMain(void){
     sys.setLogDev(&Serial);
-    
+
     Lock l;
     RFIDReader r;
-    
+
     while(!hBtn1.isPressed()) {
         LED1.off();
         LED2.off();
