@@ -68,15 +68,17 @@ private:
             char c =  hExt1.serial.getch();
             buffer += c;
             if(c == (char)0x03){
-                //Parse
-                //Check length
-                //Check checksum
-                if(buffer.length() >= 10){
-                    if(!buffer.substr(3, 2).compare("0D")){
-                        if(buffer.substr((buffer.length()-5), 2) != "0A"){
-                            LED3.on();
+                // Check length
+                if(buffer.length() >= 10) {
+                    // Check command      
+                    if(!buffer.substr(3, 2).compare("0D")) {
+                        // Check checksum
+                        if(buffer.substr((buffer.length()-5), 2) == "0A") {
+                            LED3.off();
+                        } else {
+                            // New tag spotted
                             if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
-                                // New tag spotted
+                                LED3.on();
                                 this->tag = buffer.substr(5, (buffer.length()-10));
                                 this->newTagAvaliable = true;
                             }
@@ -125,7 +127,6 @@ void hMain(void){
     l.unlock();
     while(!hBtn1.isPressed()) {
         LED1.off();
-        LED3.off();
         if(hBtn2.isPressed()) {
             l.free();
             printf("\rFreed!\n");
