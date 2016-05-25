@@ -30,7 +30,6 @@ public:
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
-        this->open(true);
     };
     Lock() {
     };
@@ -125,6 +124,7 @@ void hMain(void){
     Lock l;
     RFIDReader r;
     
+    l.unlock();
     while(!hBtn1.isPressed()) {
         LED1.off();
         LED2.off();
