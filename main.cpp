@@ -10,15 +10,14 @@ private:
     int angle2 = 180;
     bool block = 1;
     bool locked = true;
-    hMotor& mot = hMot1;
     
     bool open(bool open) {
         if(open) {
             printf("\rOpening...\n");
-            this->mot.rotAbs(this->angle1, this->power, this->block);
+            hMot1.rotAbs(this->angle1, this->power, this->block);
         } else {
             printf("\rClosing...\n");
-            this->mot.rotAbs(this->angle2, this->power, this->block);
+            hMot1.rotAbs(this->angle2, this->power, this->block);
         }
         this->locked = !open;
         printf("\rDone!\n");
@@ -48,7 +47,7 @@ public:
         
     }
     bool free() {
-        return this->mot.stopRegulation(this->block, 10);
+        return hMot1.stopRegulation(this->block, 10);
     }
 };
 
