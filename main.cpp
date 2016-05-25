@@ -81,8 +81,6 @@ private:
                                 this->newTagAvaliable = true;
                             }
                             return true;
-                        } else {
-                            LED3.off();
                         }
                     }
                 }
@@ -127,16 +125,15 @@ void hMain(void){
     l.unlock();
     while(!hBtn1.isPressed()) {
         LED1.off();
+        LED3.off();
         if(hBtn2.isPressed()) {
             l.free();
             printf("\rFreed!\n");
         }
         if(r.compareTag()) { // Check if spotted tag and it is in the list
             if(l.isLocked()) {
-                LED2.on();
                 l.unlock();
             } else {
-                LED2.off();
                 l.lock();
             }
         }
