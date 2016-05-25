@@ -7,9 +7,9 @@ using namespace hFramework;
 
 class Lock {
 private:
-    int power = 1000;
-    int angle1 = 0;
-    int angle2 = 180;
+    int power = 500;
+    int angle1 = -40;
+    int angle2 = 90;
     bool block = 1;
     bool locked = true;
     
@@ -30,6 +30,7 @@ public:
         this->power = power;
         this->angle1 = angle1;
         this->angle2 = angle2;
+        this->open(true);
     };
     Lock() {
     };
@@ -46,7 +47,7 @@ public:
         return this->locked;
     }
     bool calibrate() {
-        
+        return true;
     }
     bool free() {
         return hMot1.stopRegulation(this->block, 10);
@@ -56,7 +57,7 @@ public:
 class RFIDReader {
 private:
     std::string tag = "";
-    std::vector<std::string> tags = {"110D6BB143D51209"};
+    std::vector<std::string> tags = {"04B3F5F2A44880"};
     bool newTagAvaliable = false;
     void sendCommand() {
         hExt1.serial.printf("%c11090A41%c", (char)0x02, (char)0x03);
@@ -102,8 +103,8 @@ public:
         if(this->readId()) {
             if(this->newTagAvaliable) {
                 this->newTagAvaliable = false;
-                for(std:string t : this->tags) {
-                    if(!t.compare(this->tag)) {
+                for(unsigned int i=0; i<tags.size(); i++) {
+                    if(!tags[i].compare(this->tag)) {
                         LED1.on();
                         return true;
                     }
