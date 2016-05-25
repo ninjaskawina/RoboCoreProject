@@ -76,11 +76,11 @@ private:
                     if(!buffer.substr(3, 2).compare("0D")) {
                         // Check checksum
                         if(buffer.substr((buffer.length()-5), 2) == "0A") {
-                            LED3.off();
+                            // 
                         } else {
-                            LED3.on();
                             // New tag spotted
                             if(buffer.substr(5, (buffer.length()-10)).compare(this->tag)){
+                                LED3.on();
                                 this->tag = buffer.substr(5, (buffer.length()-10));
                                 this->newTagAvaliable = true;
                             }
@@ -91,13 +91,14 @@ private:
             }
             //110D6BB143D51209
         }
+        LED3.off();
         this->sendCommand();
         // No tag
         return false;
     }
     bool tagInList() {
         for(unsigned int i = 0; i < this->tags.size(); i++) {
-            if(!tags[i].compare(this->tag)) {
+            if(!this->tags[i].compare(this->tag)) {
                 return true;
             }
         }
@@ -115,7 +116,7 @@ private:
     bool manageTag() {
         if(this->tagInList()) {
             for(unsigned int i=0; i < this->tags.size(); i++) {
-                if(!tags[i].compare(this->tag)) {
+                if(!this->tags[i].compare(this->tag)) {
                     this->tags.erase(this->tags.begin() + i);
                     this->toggleMaster(false);
                     return true;
@@ -123,9 +124,9 @@ private:
             }
         } else {
             this->tags.push_back(this->tag);
-            this->toggleMaster(false);
-            return true;
         }
+        this->toggleMaster(false);
+        return true;
     }
 public:
     RFIDReader() {
