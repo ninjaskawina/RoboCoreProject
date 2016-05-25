@@ -88,10 +88,10 @@ private:
                         }
                     }
                 }
+                LED3.off();
             }
             //110D6BB143D51209
         }
-        LED3.off();
         this->sendCommand();
         // No tag
         return false;
